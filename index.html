@@ -233,6 +233,66 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
 .trashrow span { overflow-wrap: anywhere; }
 .trashrow small { display: block; color: var(--muted); }
 
+/* Préparer une messe */
+.cta-row { margin: 14px 0 0; }
+.cta-row .btn { width: 100%; min-height: 52px; background: var(--primary-soft); border-color: transparent; color: var(--primary); }
+@media (min-width: 520px) { .cta-row .btn { width: auto; padding: 0 24px; } }
+.compose-top { margin: 14px 0 0; }
+.compose h2.ctitle { margin: 16px 0 6px; font: 500 1.9rem/1.15 var(--serif); }
+.compose .lead { margin: 0 0 16px; color: var(--muted); font-size: .98rem; }
+.datefield { display: block; margin: 0 0 8px; font-weight: 600; font-size: .95rem; }
+.datefield input {
+  display: block; width: 100%; max-width: 20rem; min-height: 48px; margin-top: 6px; padding: 0 12px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface); font-weight: 400;
+}
+.datefield input:focus, .slot input[type="text"]:focus, .pickersearch:focus {
+  border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent);
+}
+.slots { list-style: none; margin: 14px 0 0; padding: 0; }
+.slot { padding: 14px 0; border-top: 1px solid var(--line); }
+.slot:last-child { border-bottom: 1px solid var(--line); }
+.slot-label { margin: 0 0 4px; color: var(--muted); font-size: .95rem; font-weight: 600; }
+.pick { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 6px 0; }
+.pick .t { min-width: 0; font: 500 1.25rem/1.25 var(--serif); overflow-wrap: anywhere; }
+.pick .t small { display: block; margin-top: 3px; font: 400 .9rem/1.3 var(--sans); color: var(--muted); }
+.pick .acts { display: flex; gap: 8px; flex: none; }
+.btn.small { min-height: 44px; padding: 0 14px; font-size: .95rem; }
+.slot input[type="text"] {
+  display: block; width: 100%; min-height: 48px; margin-top: 4px; padding: 0 12px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface);
+}
+.export { margin: 26px 0 0; }
+.export h3 { margin: 0 0 12px; font: 500 1.4rem/1.2 var(--serif); }
+.export .empty { margin: 0; color: var(--muted); }
+.export-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.export textarea {
+  display: block; width: 100%; min-height: 13rem; margin-top: 14px; padding: 12px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface);
+  font: 400 .95rem/1.5 var(--sans); resize: vertical;
+}
+.preview { margin: 18px 0 0; }
+.preview img { display: block; width: min(100%, 18rem); border: 1px solid var(--line); border-radius: 12px; }
+.preview p { margin: 8px 0 0; color: var(--muted); font-size: .9rem; }
+.reset-row { margin: 18px 0 0; }
+.pickersearch {
+  display: block; width: 100%; min-height: 48px; padding: 0 12px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--bg);
+  -webkit-appearance: none; appearance: none;
+}
+.pickersearch::-webkit-search-cancel-button { display: none; }
+.pickopts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 12px 0 0; }
+.pickopts select { min-height: 40px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); }
+.results { list-style: none; margin: 8px 0 0; padding: 0; }
+.results li:last-child { border-bottom: 1px solid var(--line); }
+.results button.res {
+  display: block; width: 100%; padding: 12px 4px; text-align: left;
+  border: 0; border-top: 1px solid var(--line); background: transparent;
+}
+.res .rt { display: block; font: 500 1.15rem/1.25 var(--serif); overflow-wrap: anywhere; }
+.res .rm { display: block; margin-top: 2px; color: var(--muted); font-size: .9rem; }
+.free { margin: 18px 0 0; padding-top: 14px; border-top: 2px solid var(--line); }
+.free .btn { margin-top: 10px; }
+
 /* Message temporaire */
 #toast {
   position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
@@ -270,6 +330,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
         <rect x="40.8" y="0" width="1.8" height="24"/>
       </g>
     </svg>
+    <div class="cta-row" id="ctaRow"><button class="btn" id="btnCompose" type="button">Préparer une messe</button></div>
   </header>
 
   <div class="editbar" id="editbar" hidden>
@@ -279,6 +340,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     <button class="btn" id="btnQuit" type="button">Quitter l'édition</button>
   </div>
 
+  <div id="bankView">
   <div class="toolbar" id="toolbar">
     <div class="seg" role="group" aria-label="Type de contenu">
       <button type="button" id="tabChant" data-type="Chant" aria-pressed="true">Chants<span class="n"></span></button>
@@ -318,9 +380,12 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     <div id="state"></div>
     <button class="btn more" id="more" type="button" hidden>Afficher la suite</button>
   </main>
+  </div>
+
+  <section class="compose" id="composeView" hidden></section>
 
   <footer>
-    <p>Banque de chants de l'équipe d'animation, Église Saint-Jean-Baptiste de Montréal.</p>
+    <p>Banque de chants de l'équipe d'animation, Saint-Jean-Baptiste Montréal.</p>
     <p><button class="linkbtn" id="refresh" type="button" style="padding:6px 0">Actualiser la liste</button> <span id="maj"></span></p>
   </footer>
 </div>
@@ -342,7 +407,8 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     chants: [], tagLabels: new Map(),
     type: 'Chant', q: '', tags: new Set(), sort: 'az',
     shown: PAGE, tagsOpen: false,
-    edit: false, code: null, loaded: false, failed: false
+    edit: false, code: null, loaded: false, failed: false,
+    view: 'banque'
   };
 
   /* ---------- Outils ---------- */
@@ -352,7 +418,8 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
     play: '<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>',
     pencil: '<path d="M14 5l5 5L8 21H3v-5z"/>',
-    close: '<path d="M6 6l12 12M18 6L6 18"/>'
+    close: '<path d="M6 6l12 12M18 6L6 18"/>',
+    doc: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>'
   };
   function icon(name, size) {
     var s = size || 20;
@@ -517,7 +584,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     }
     calculerLabels();
     ecrireCache(state.chants.map(function (c) {
-      return { id: c.id, titre: c.titre, type: c.type, tags: c.tags, lien: c.lien, derniere: c.derniere, nb: c.nb, prochaine: c.prochaine, statut: c.statut };
+      return { id: c.id, titre: c.titre, type: c.type, tags: c.tags, lien: c.lien, partition: c.partition || '', derniere: c.derniere, nb: c.nb, prochaine: c.prochaine, statut: c.statut };
     }), new Date().toISOString());
     render();
   }
@@ -542,19 +609,20 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     return { items: items, counts: counts };
   }
 
-  function trier(items) {
+  function trier(items, mode) {
+    var m = mode || state.sort;
     var arr = items.slice();
     var az = function (a, b) { return a.titre.localeCompare(b.titre, 'fr', { sensitivity: 'base' }); };
-    if (state.sort === 'freq') {
+    if (m === 'freq') {
       arr.sort(function (a, b) { return (b.nb - a.nb) || az(a, b); });
-    } else if (state.sort === 'recent') {
+    } else if (m === 'recent') {
       arr.sort(function (a, b) {
         if (!a.derniere && !b.derniere) return az(a, b);
         if (!a.derniere) return 1;
         if (!b.derniere) return -1;
         return b.derniere < a.derniere ? -1 : b.derniere > a.derniere ? 1 : az(a, b);
       });
-    } else if (state.sort === 'old') {
+    } else if (m === 'old') {
       arr.sort(function (a, b) {
         if (!a.derniere && !b.derniere) return az(a, b);
         if (!a.derniere) return 1;
@@ -574,6 +642,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     renderTags(res.counts);
     renderList(trier(res.items));
     renderEditUi();
+    if (state.view === 'messe') rafraichirMesse();
   }
 
   function renderTabs() {
@@ -651,6 +720,12 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
         'aria-label': 'Écouter ' + c.titre
       }, icon('play', 18), h('span', { class: 'lbl' }, 'Écouter')));
     }
+    if (c.partition && /^https?:\/\//i.test(c.partition)) {
+      actions.appendChild(h('a', {
+        class: 'iconbtn', href: c.partition, target: '_blank', rel: 'noopener noreferrer',
+        'aria-label': 'Partition de ' + c.titre
+      }, icon('doc', 18), h('span', { class: 'lbl' }, 'Partition')));
+    }
     if (state.edit) {
       actions.appendChild(h('button', {
         class: 'iconbtn', type: 'button', 'aria-label': 'Modifier ' + c.titre,
@@ -724,7 +799,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   }
 
   function renderEditUi() {
-    $('#editbar').hidden = !state.edit;
+    $('#editbar').hidden = !state.edit || state.view === 'messe';
     var b = $('#btnEdit');
     b.hidden = state.edit;
     b.replaceChildren(icon('lock', 18), document.createTextNode('Édition'));
@@ -844,6 +919,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
 
     var titre = h('input', { type: 'text', id: 'f-titre', value: chant ? chant.titre : (titrePrefill || ''), autocomplete: 'off', required: true, maxlength: '150', autofocus: nouveau });
     var lien = h('input', { type: 'url', id: 'f-lien', value: chant ? chant.lien : '', placeholder: 'https://…', autocomplete: 'off', inputmode: 'url' });
+    var partition = h('input', { type: 'url', id: 'f-partition', value: chant ? (chant.partition || '') : '', placeholder: 'https://…', autocomplete: 'off', inputmode: 'url' });
     var zoneErr = h('p', { class: 'err', role: 'alert' });
     zoneErr.hidden = true;
 
@@ -923,7 +999,8 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       h('label', { class: 'field', for: 'f-titre' }, 'Titre', titre),
       h('div', { class: 'field' }, 'Type', h('div', { class: 'seg', role: 'group', 'aria-label': 'Type' }, btnChant, btnOrd)),
       h('div', { class: 'field' }, h('label', { for: 'f-tags' }, 'Tags'), tagBox, suggestions),
-      h('label', { class: 'field', for: 'f-lien' }, 'Lien pour écouter (facultatif)', lien),
+      h('label', { class: 'field', for: 'f-lien' }, 'Audio : lien pour écouter (facultatif)', lien),
+      h('label', { class: 'field', for: 'f-partition' }, 'Partition : lien (facultatif)', partition),
       zoneErr,
       actions);
 
@@ -934,7 +1011,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       if (!t) { zoneErr.hidden = false; zoneErr.textContent = 'Le titre est obligatoire.'; titre.focus(); return; }
       zoneErr.hidden = true;
       enregistrer.disabled = true; enregistrer.textContent = 'Enregistrement…';
-      var donnees = { titre: t, type: type, tags: tags, lien: lien.value.trim() };
+      var donnees = { titre: t, type: type, tags: tags, lien: lien.value.trim(), partition: partition.value.trim() };
       if (!nouveau) donnees.id = chant.id;
       appel(nouveau ? 'ajouter' : 'modifier', donnees).then(function (data) {
         majLocale(data.chant);
@@ -982,6 +1059,472 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
         });
     }).catch(function (err) { liste.replaceChildren(); gererErreur(err, zoneErr); });
   }
+
+  /* ---------- Préparer une messe ----------
+     Tout reste dans le navigateur : rien n'est envoyé ni enregistré sur le serveur.
+     Un brouillon est gardé le temps de la session (onglet ouvert), pour survivre à un rechargement. */
+  var MASS_KEY = 'chants-baptiste:messe';
+  var SLOTS = [
+    { key: 'entree', label: 'Entrée', tag: 'Entrée' },
+    { key: 'ordinaire', label: 'Ordinaire', types: ['Ordinaire'] },
+    { key: 'psaume', label: 'Psaume', libre: true },
+    { key: 'alleluia', label: 'Alléluia (si différent)', nom: 'Alléluia', tag: 'Alléluia', types: ['Chant', 'Ordinaire'] },
+    { key: 'priere', label: 'Prière universelle', tag: 'Prière universelle' },
+    { key: 'offertoire', label: 'Offertoire', tag: 'Offertoire' },
+    { key: 'sanctus', label: 'Sanctus (si différent)', nom: 'Sanctus', tag: 'Sanctus', types: ['Chant', 'Ordinaire'] },
+    { key: 'anamnese', label: 'Anamnèse (si différent)', nom: 'Anamnèse', tag: 'Anamnèse', types: ['Chant', 'Ordinaire'] },
+    { key: 'agnus', label: 'Agnus (si différent)', nom: 'Agnus', tag: 'Agnus', types: ['Chant', 'Ordinaire'] },
+    { key: 'communion', label: 'Communion', tag: 'Communion' },
+    { key: 'action', label: 'Action de grâce', tag: 'Action de grâce' },
+    { key: 'envoi', label: 'Envoi', tag: 'Envoi' },
+    { key: 'autres', label: 'Autres chants', multi: true }
+  ];
+  var mass = chargerMesse();
+  var apercuUrl = null;
+
+  function isoLocal(d) {
+    var m = d.getMonth() + 1, j = d.getDate();
+    return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (j < 10 ? '0' : '') + j;
+  }
+  function prochainDimanche() {
+    var d = new Date();
+    d.setDate(d.getDate() + ((7 - d.getDay()) % 7));
+    return isoLocal(d);
+  }
+  function messeVide() { return { date: prochainDimanche(), items: {} }; }
+  function chargerMesse() {
+    try {
+      var m = JSON.parse(sessionStorage.getItem(MASS_KEY));
+      if (m && typeof m.date === 'string' && m.items && typeof m.items === 'object') return m;
+    } catch (e) { /* rien */ }
+    return messeVide();
+  }
+  function sauverMesse() {
+    try { sessionStorage.setItem(MASS_KEY, JSON.stringify(mass)); } catch (e) { /* rien */ }
+  }
+
+  function dateLongue(majuscule) {
+    if (!mass.date) return '';
+    var d = parseISO(mass.date);
+    if (isNaN(d)) return '';
+    var s = d.toLocaleDateString('fr-CA', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    return majuscule ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  }
+
+  function entrees(slot) {
+    var a = mass.items[slot.key];
+    return Array.isArray(a) ? a.filter(function (e) { return e && (e.id || String(e.titre || '').trim()); }) : [];
+  }
+  function resoudre(e) {
+    var c = e.id ? state.chants.find(function (x) { return x.id === e.id; }) : null;
+    if (c) {
+      return { titre: c.titre, audio: c.lien || '', partition: c.partition || '', type: c.type, nb: c.nb, derniere: c.derniere, prochaine: c.prochaine, banque: true };
+    }
+    return { titre: String(e.titre || '').trim(), audio: '', partition: '', banque: false };
+  }
+  function statsTexte(c) {
+    var verbe = c.type === 'Ordinaire' ? 'Utilisé' : 'Chanté';
+    var s = c.nb > 0 ? 'Dernière fois le ' + fmtDate(c.derniere) + ' (' + verbe.toLowerCase() + ' ' + c.nb + ' fois)'
+      : (c.type === 'Ordinaire' ? 'Pas encore utilisé' : 'Pas encore chanté');
+    if (c.prochaine) s += '. Prévu le ' + fmtDate(c.prochaine);
+    return s;
+  }
+  function liensTexte(r) {
+    if (r.audio && r.partition) return 'audio et partition';
+    if (r.audio) return 'audio';
+    if (r.partition) return 'partition';
+    return '';
+  }
+
+  function lignesMesse() {
+    var out = [];
+    SLOTS.forEach(function (s) {
+      var arr = entrees(s).map(resoudre).filter(function (r) { return r.titre; });
+      if (arr.length) out.push({ nom: s.nom || s.label, items: arr });
+    });
+    return out;
+  }
+  function texteMesse() {
+    var lignes = lignesMesse();
+    if (!lignes.length) return '';
+    var d = dateLongue(false);
+    var t = [d ? 'Messe du ' + d : 'Messe', 'Saint-Jean-Baptiste Montréal', ''];
+    lignes.forEach(function (l) {
+      l.items.forEach(function (r) {
+        t.push(l.nom + ' : ' + r.titre);
+        if (r.audio) t.push('  Audio : ' + r.audio);
+        if (r.partition) t.push('  Partition : ' + r.partition);
+      });
+    });
+    return t.join('\n');
+  }
+
+  /* Affichage */
+  function afficherVue(v) {
+    state.view = v;
+    var messe = v === 'messe';
+    $('#bankView').hidden = messe;
+    $('#composeView').hidden = !messe;
+    $('#ctaRow').hidden = messe;
+    if (messe) { renderMesse(); renderEditUi(); } else { render(); }
+    window.scrollTo(0, 0);
+  }
+  function ouvrirMesse() {
+    try { history.pushState({ messe: 1 }, ''); } catch (e) { /* rien */ }
+    afficherVue('messe');
+  }
+  function fermerMesse() {
+    if (history.state && history.state.messe) history.back(); else afficherVue('banque');
+  }
+  window.addEventListener('popstate', function () {
+    if (state.view === 'messe') afficherVue('banque');
+  });
+
+  function renderMesse() {
+    var root = $('#composeView');
+    root.replaceChildren();
+    root.appendChild(h('div', { class: 'compose-top' },
+      h('button', { class: 'btn small', type: 'button', onclick: fermerMesse }, 'Retour à la banque')));
+    root.appendChild(h('h2', { class: 'ctitle' }, 'Préparer une messe'));
+    root.appendChild(h('p', { class: 'lead' }, 'Rien n\'est enregistré sur le site : compose la messe, puis copie le texte ou télécharge l\'image.'));
+    var dateIn = h('input', { type: 'date', id: 'm-date', value: mass.date });
+    dateIn.addEventListener('input', function () { mass.date = dateIn.value; sauverMesse(); majExport(); });
+    root.appendChild(h('label', { class: 'datefield', for: 'm-date' }, 'Date de la messe', dateIn));
+    root.appendChild(h('ol', { class: 'slots', id: 'slots' }));
+    root.appendChild(h('div', { class: 'export', id: 'export' }));
+    root.appendChild(h('div', { class: 'reset-row' },
+      h('button', { class: 'linkbtn', type: 'button', onclick: recommencerMesse }, 'Recommencer avec une messe vide')));
+    renderSlots();
+    majExport();
+  }
+
+  function rafraichirMesse() {
+    var a = document.activeElement;
+    var saisie = a && a.tagName === 'INPUT' && $('#composeView').contains(a);
+    if (!saisie) renderSlots();
+    majExport();
+  }
+
+  function recommencerMesse() {
+    if (!window.confirm('Effacer cette composition et recommencer ?')) return;
+    mass = messeVide();
+    sauverMesse();
+    renderMesse();
+  }
+
+  function renderSlots() {
+    var ol = $('#slots');
+    if (!ol) return;
+    ol.replaceChildren();
+    SLOTS.forEach(function (s) {
+      var li = h('li', { class: 'slot' }, h('p', { class: 'slot-label' }, s.label));
+      if (s.libre) {
+        var cur = entrees(s)[0];
+        var inp = h('input', {
+          type: 'text', value: cur ? cur.titre : '', maxlength: '200', autocomplete: 'off',
+          placeholder: 'Ex. Psaume 22, « Le Seigneur est mon berger »', 'aria-label': s.label
+        });
+        inp.addEventListener('input', function () {
+          mass.items[s.key] = inp.value.trim() ? [{ titre: inp.value }] : [];
+          sauverMesse();
+          majExport();
+        });
+        li.appendChild(inp);
+      } else {
+        var arr = entrees(s);
+        arr.forEach(function (e, i) {
+          var r = resoudre(e);
+          var detail = r.banque
+            ? statsTexte(r) + '. ' + (liensTexte(r) ? 'Avec ' + liensTexte(r) + '.' : 'Aucun lien enregistré.')
+            : 'Titre écrit à la main.';
+          li.appendChild(h('div', { class: 'pick' },
+            h('div', { class: 't' }, r.titre, h('small', null, detail)),
+            h('div', { class: 'acts' },
+              s.multi ? null : h('button', { class: 'btn small', type: 'button', onclick: function () { ouvrirSelection(s); } }, 'Changer'),
+              h('button', { class: 'btn small', type: 'button', 'aria-label': 'Retirer ' + r.titre, onclick: function () { retirer(s, i); } }, 'Retirer'))));
+        });
+        if (!arr.length || s.multi) {
+          li.appendChild(h('button', { class: 'btn small', type: 'button', onclick: function () { ouvrirSelection(s); } },
+            arr.length ? 'Ajouter un autre chant' : 'Choisir'));
+        }
+      }
+      ol.appendChild(li);
+    });
+  }
+
+  function retirer(slot, i) {
+    var a = entrees(slot);
+    a.splice(i, 1);
+    mass.items[slot.key] = a;
+    sauverMesse();
+    renderSlots();
+    majExport();
+  }
+
+  function choisir(slot, entry) {
+    var a = entrees(slot);
+    if (slot.multi) {
+      var deja = a.some(function (e) {
+        return entry.id ? e.id === entry.id : (!e.id && norm(e.titre) === norm(entry.titre));
+      });
+      if (!deja) a.push(entry);
+    } else {
+      a = [entry];
+    }
+    mass.items[slot.key] = a;
+    sauverMesse();
+    fermerDlg();
+    renderSlots();
+    majExport();
+  }
+
+  function ouvrirSelection(slot) {
+    var types = slot.types || ['Chant'];
+    var tagKey = slot.tag ? norm(slot.tag) : null;
+    var etat = { q: '', soloTag: !!tagKey, tri: 'az' };
+
+    var recherche = h('input', {
+      type: 'search', class: 'pickersearch', placeholder: 'Chercher un titre', 'aria-label': 'Chercher un titre',
+      autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false', autofocus: true
+    });
+    var info = h('p', { class: 'hint', 'aria-live': 'polite', style: 'margin:12px 0 0' });
+    var liste = h('ul', { class: 'results' });
+
+    var chipTag = tagKey ? h('button', {
+      class: 'chip', type: 'button', 'aria-pressed': 'true',
+      onclick: function () { etat.soloTag = !etat.soloTag; chipTag.setAttribute('aria-pressed', String(etat.soloTag)); maj(); }
+    }, (types.length > 1 ? 'Chants « ' : 'Seulement « ') + slot.tag + ' »' + (types.length > 1 ? ' et ordinaires' : '')) : null;
+
+    var triSel = h('select', { 'aria-label': 'Trier les résultats' },
+      h('option', { value: 'az' }, 'Ordre alphabétique'),
+      h('option', { value: 'old' }, 'Pas chantés depuis longtemps'),
+      h('option', { value: 'freq' }, 'Les plus chantés'));
+    triSel.addEventListener('change', function () { etat.tri = triSel.value; maj(); });
+
+    var libre = h('input', { type: 'text', class: 'pickersearch', 'aria-label': 'Titre écrit à la main', placeholder: 'Titre du chant', maxlength: '150', autocomplete: 'off' });
+    var btnLibre = h('button', {
+      class: 'btn small', type: 'button',
+      onclick: function () {
+        var t = libre.value.replace(/\s+/g, ' ').trim();
+        if (!t) { libre.focus(); return; }
+        choisir(slot, { titre: t.charAt(0).toUpperCase() + t.slice(1) });
+      }
+    }, 'Utiliser ce titre');
+    libre.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); btnLibre.click(); } });
+
+    function maj() {
+      var termes = norm(etat.q).split(' ').filter(Boolean);
+      var items = state.chants.filter(function (c) {
+        if (types.indexOf(c.type) === -1) return false;
+        // Le filtre par tag ne vise que les chants : les ordinaires n'ont pas les tags des lignes
+        if (etat.soloTag && c.type === 'Chant' && c._g.indexOf(tagKey) === -1) return false;
+        return termes.every(function (t) {
+          return t.length >= 4 ? c._m.indexOf(t) !== -1 : c._m.indexOf(' ' + t) !== -1;
+        });
+      });
+      items = trier(items, etat.tri);
+      var MAX = 40;
+      liste.replaceChildren();
+      items.slice(0, MAX).forEach(function (c) {
+        liste.appendChild(h('li', null,
+          h('button', { class: 'res', type: 'button', onclick: function () { choisir(slot, { id: c.id, titre: c.titre }); } },
+            h('span', { class: 'rt' }, c.titre),
+            h('span', { class: 'rm' }, statsTexte(c)))));
+      });
+      if (!state.loaded) info.textContent = 'La banque est en train de charger…';
+      else if (!items.length) info.textContent = etat.soloTag && !etat.q.trim()
+        ? 'Aucun chant avec le tag « ' + slot.tag + ' ». Retire le filtre pour voir tous les chants.'
+        : 'Aucun résultat.' + (etat.soloTag ? ' Retire le filtre « ' + slot.tag + ' » pour élargir.' : '');
+      else if (items.length > MAX) info.textContent = MAX + ' premiers résultats sur ' + items.length + '. Précise ta recherche.';
+      else info.textContent = items.length + (items.length > 1 ? ' résultats' : ' résultat');
+    }
+    recherche.addEventListener('input', function () { etat.q = recherche.value; maj(); });
+
+    ouvrirDlg(
+      h('h2', null, 'Choisir : ' + (slot.nom || slot.label)),
+      recherche,
+      h('div', { class: 'pickopts' }, chipTag, triSel),
+      info, liste,
+      h('div', { class: 'free' },
+        h('p', { class: 'slot-label' }, 'Pas dans la banque ?'),
+        libre, btnLibre),
+      h('div', { class: 'dlg-actions' }, h('button', { class: 'btn', type: 'button', onclick: fermerDlg }, 'Annuler')));
+    maj();
+  }
+
+  /* Exports */
+  function majExport() {
+    var box = $('#export');
+    if (!box) return;
+    if (apercuUrl) { URL.revokeObjectURL(apercuUrl); apercuUrl = null; }
+    var texte = texteMesse();
+    box.replaceChildren(h('h3', null, 'Partager la messe'));
+    if (!texte) {
+      box.appendChild(h('p', { class: 'empty' }, 'Choisis au moins un chant pour obtenir le texte et l\'image.'));
+      return;
+    }
+    var zone = h('textarea', { id: 'm-texte', readonly: true, rows: '12', 'aria-label': 'Texte de la messe' });
+    zone.value = texte;
+    box.appendChild(h('div', { class: 'export-actions' },
+      h('button', { class: 'btn primary', type: 'button', onclick: copierTexte }, 'Copier le texte'),
+      h('button', { class: 'btn', type: 'button', onclick: telechargerImage }, 'Télécharger l\'image')));
+    box.appendChild(zone);
+    box.appendChild(h('div', { class: 'preview', id: 'm-apercu' }));
+  }
+
+  function copierTexte() {
+    var texte = texteMesse();
+    function secours() {
+      var z = $('#m-texte');
+      if (!z) return;
+      z.focus(); z.select();
+      try { z.setSelectionRange(0, z.value.length); } catch (e) { /* rien */ }
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { /* rien */ }
+      toast(ok ? 'Texte copié.' : 'Sélectionne le texte et copie-le à la main.');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texte).then(function () { toast('Texte copié.'); }, secours);
+    } else {
+      secours();
+    }
+  }
+
+  function telechargerImage() {
+    var lignes = lignesMesse();
+    if (!lignes.length) return;
+    toast('Création de l\'image…');
+    creerImage(lignes).then(function (blob) {
+      if (!blob) throw new Error('vide');
+      var url = URL.createObjectURL(blob);
+      var a = h('a', { href: url, download: 'messe-' + (mass.date || 'sans-date') + '.png' });
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      var apercu = $('#m-apercu');
+      if (apercu) {
+        if (apercuUrl) URL.revokeObjectURL(apercuUrl);
+        apercuUrl = url;
+        apercu.replaceChildren(
+          h('img', { src: url, alt: 'Aperçu de l\'image de la messe' }),
+          h('p', null, 'Si le téléchargement ne démarre pas, garde le doigt appuyé sur l\'image pour l\'enregistrer.'));
+      } else {
+        setTimeout(function () { URL.revokeObjectURL(url); }, 15000);
+      }
+      toast('Image prête.');
+    }).catch(function () {
+      toast('Impossible de créer l\'image sur cet appareil.');
+    });
+  }
+
+  function creerImage(lignes) {
+    var chargement = Promise.resolve();
+    try {
+      if (document.fonts && document.fonts.load) {
+        chargement = Promise.all([
+          document.fonts.load('500 60px Newsreader'),
+          document.fonts.load('600 30px Figtree'),
+          document.fonts.load('400 30px Figtree')
+        ]).catch(function () { /* polices de secours */ });
+      }
+    } catch (e) { /* rien */ }
+
+    return chargement.then(function () {
+      var W = 1080, PAD = 88, MAXW = W - PAD * 2;
+      var SERIF = "'Newsreader', Georgia, 'Times New Roman', serif";
+      var SANS = "'Figtree', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif";
+      var F_DATE = '500 76px ' + SERIF, F_SOUS = '400 34px ' + SANS;
+      var F_LABEL = '600 29px ' + SANS, F_TITRE = '500 50px ' + SERIF;
+
+      var mesure = document.createElement('canvas').getContext('2d');
+      function couper(texte, police) {
+        mesure.font = police;
+        var out = [], cur = '';
+        String(texte).split(/\s+/).forEach(function (mot) {
+          var essai = cur ? cur + ' ' + mot : mot;
+          if (!cur || mesure.measureText(essai).width <= MAXW) cur = essai;
+          else { out.push(cur); cur = mot; }
+        });
+        if (cur) out.push(cur);
+        return out;
+      }
+
+      var enTete = couper(dateLongue(true) || 'Messe', F_DATE);
+      var rangees = [];
+      lignes.forEach(function (l) {
+        l.items.forEach(function (r, i) {
+          var lignesTitre = couper(r.titre, F_TITRE);
+          rangees.push({ label: i === 0 ? l.nom : '', lignes: lignesTitre, h: (i === 0 ? 44 : 0) + lignesTitre.length * 62 + 40 });
+        });
+      });
+
+      var yDate = 160;
+      var ySous = yDate + (enTete.length - 1) * 96 + 66;
+      var yPortee = ySous + 70;
+      var yDebut = yPortee + 64 + 96;
+      var total = rangees.reduce(function (s, r) { return s + r.h; }, yDebut);
+      var H = Math.max(1350, total + 170);
+
+      var cv = document.createElement('canvas');
+      cv.width = W; cv.height = H;
+      var c = cv.getContext('2d');
+      c.fillStyle = '#F6F2EA';
+      c.fillRect(0, 0, W, H);
+
+      c.fillStyle = '#27221D';
+      c.font = F_DATE;
+      enTete.forEach(function (t, i) { c.fillText(t, PAD, yDate + i * 96); });
+      c.fillStyle = '#6B6258';
+      c.font = F_SOUS;
+      c.fillText('Saint-Jean-Baptiste Montréal', PAD, ySous);
+
+      // Portée et note, comme dans l'en-tête du site
+      c.strokeStyle = 'rgba(33,59,115,0.3)';
+      c.lineWidth = 2;
+      for (var k = 0; k < 5; k++) {
+        c.beginPath(); c.moveTo(PAD, yPortee + k * 16); c.lineTo(W - PAD, yPortee + k * 16); c.stroke();
+      }
+      c.fillStyle = '#213B73';
+      c.beginPath();
+      c.ellipse(PAD + 70, yPortee + 48, 17, 12, -0.35, 0, Math.PI * 2);
+      c.fill();
+      c.fillRect(PAD + 83, yPortee - 16, 5, 64);
+
+      var y = yDebut;
+      rangees.forEach(function (r, idx) {
+        if (idx > 0 && r.label) {
+          c.strokeStyle = '#DDD5C7';
+          c.lineWidth = 2;
+          c.beginPath(); c.moveTo(PAD, y - 24); c.lineTo(W - PAD, y - 24); c.stroke();
+        }
+        if (r.label) {
+          c.fillStyle = '#213B73';
+          c.font = F_LABEL;
+          c.fillText(r.label, PAD, y + 26);
+          y += 44;
+        }
+        c.fillStyle = '#27221D';
+        c.font = F_TITRE;
+        r.lignes.forEach(function (t) { c.fillText(t, PAD, y + 44); y += 62; });
+        y += 40;
+      });
+
+      c.fillStyle = '#213B73';
+      c.font = '500 40px ' + SERIF;
+      c.fillText('Chants-Baptiste', PAD, H - 80);
+      if (location.hostname) {
+        c.fillStyle = '#6B6258';
+        c.font = '400 28px ' + SANS;
+        c.textAlign = 'right';
+        c.fillText(location.hostname, W - PAD, H - 80);
+        c.textAlign = 'left';
+      }
+
+      return new Promise(function (resolve) { cv.toBlob(resolve, 'image/png'); });
+    });
+  }
+
+  $('#btnCompose').addEventListener('click', ouvrirMesse);
 
   /* ---------- Événements ---------- */
   var minuteur = null;
