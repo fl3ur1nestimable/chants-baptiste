@@ -52,7 +52,7 @@ body {
   color: var(--ink);
   font: 400 1.0625rem/1.5 var(--sans);
 }
-button, input, select { font: inherit; color: inherit; }
+button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
 .wrap { max-width: 46rem; margin: 0 auto; padding: 0 16px; }
@@ -293,6 +293,73 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
 .free { margin: 18px 0 0; padding-top: 14px; border-top: 2px solid var(--line); }
 .free .btn { margin-top: 10px; }
 
+/* Couleurs des tags : une teinte par tag, douce, qui suit le thème clair ou sombre */
+.tc-bleu   { --th: 220; --ts: 46%; }
+.tc-ciel   { --th: 193; --ts: 52%; }
+.tc-vert   { --th: 140; --ts: 36%; }
+.tc-olive  { --th: 75;  --ts: 40%; }
+.tc-jaune  { --th: 42;  --ts: 62%; }
+.tc-orange { --th: 22;  --ts: 60%; }
+.tc-rouge  { --th: 4;   --ts: 50%; }
+.tc-rose   { --th: 330; --ts: 44%; }
+.tc-violet { --th: 270; --ts: 38%; }
+.tc-gris   { --th: 30;  --ts: 8%; }
+.chip[class*="tc-"] { background: hsl(var(--th) var(--ts) 90%); color: hsl(var(--th) calc(var(--ts) + 5%) 22%); }
+.chip[class*="tc-"][aria-pressed="true"] { background: hsl(var(--th) var(--ts) 32%); color: #fff; }
+@media (prefers-color-scheme: dark) {
+  .chip[class*="tc-"] { background: hsl(var(--th) calc(var(--ts) * .6) 23%); color: hsl(var(--th) calc(var(--ts) + 25%) 83%); }
+  .chip[class*="tc-"][aria-pressed="true"] { background: hsl(var(--th) calc(var(--ts) + 10%) 74%); color: hsl(var(--th) 40% 12%); }
+}
+.swatch {
+  width: 34px; height: 34px; padding: 0; border-radius: 50%;
+  border: 3px solid transparent; background: hsl(var(--th) var(--ts) 62%);
+}
+.swatch[aria-pressed="true"] { border-color: var(--ink); }
+.swatch.auto { background: var(--chip); color: var(--chip-ink); font-size: .72rem; font-weight: 700; width: auto; border-radius: 999px; padding: 0 12px; height: 34px; border-width: 2px; }
+.palette { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 6px 0 12px; }
+.taglist { margin-top: 12px; }
+.tagrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 5px 0; }
+.tagrow .linkbtn { padding: 8px 2px; font-size: .92rem; }
+
+/* Paroles */
+.lyrics { margin: 18px 0 0; font: 400 1.2rem/1.65 var(--serif); white-space: pre-wrap; overflow-wrap: anywhere; }
+.linkrow { display: flex; flex-wrap: wrap; gap: 10px; }
+.linkrow .btn { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary); }
+.field > textarea {
+  display: block; width: 100%; min-height: 7rem; margin-top: 6px; padding: 10px 12px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--bg); font-weight: 400; resize: vertical;
+}
+.field > textarea:focus { border-color: var(--primary); outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent); }
+.datefield input[type="text"] { max-width: none; }
+
+/* Suggestions d'un agent IA */
+.rev h3 { margin: 28px 0 8px; font: 500 1.4rem/1.2 var(--serif); }
+.rev .opts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 12px 0; }
+.rev .opts select { min-height: 44px; padding: 0 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+.rev textarea.paste {
+  display: block; width: 100%; min-height: 6rem; margin: 10px 0; padding: 10px 12px;
+  border: 1.5px solid var(--line); border-radius: 12px; background: var(--surface); font-size: .9rem;
+}
+.rev input[type="file"] { max-width: 100%; }
+.card { padding: 16px 0; border-top: 1px solid var(--line); }
+.card h4 { margin: 0; font: 500 1.25rem/1.25 var(--serif); }
+.card h4 small { font: 400 .85rem var(--sans); color: var(--muted); margin-left: 6px; }
+.prop { display: flex; align-items: flex-start; gap: 12px; margin-top: 10px; }
+.prop input[type="checkbox"] { flex: none; width: 24px; height: 24px; margin-top: 2px; accent-color: var(--primary); }
+.prop .body { min-width: 0; font-size: .96rem; }
+.prop .kind { font-weight: 700; }
+.prop a { overflow-wrap: anywhere; color: var(--primary); }
+.prop .sure { color: var(--muted); font-size: .88rem; }
+.prop .old { display: block; color: var(--muted); font-size: .88rem; overflow-wrap: anywhere; }
+.proptags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.card .note { margin: 10px 0 0; color: var(--muted); font-size: .9rem; }
+.revbar {
+  position: sticky; bottom: 0; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px;
+  margin: 16px -16px 0; padding: 12px 16px; background: var(--bg); border-top: 1px solid var(--line);
+}
+.revbar .btn { min-height: 48px; }
+pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); font: 400 .85rem/1.45 var(--sans); white-space: pre-wrap; }
+
 /* Message temporaire */
 #toast {
   position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%);
@@ -336,6 +403,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   <div class="editbar" id="editbar" hidden>
     <strong>Mode édition</strong>
     <button class="btn" id="btnAdd" type="button">Ajouter un chant</button>
+    <button class="btn" id="btnSuggest" type="button">Suggestions</button>
     <button class="btn" id="btnTrash" type="button">Corbeille</button>
     <button class="btn" id="btnQuit" type="button">Quitter l'édition</button>
   </div>
@@ -383,6 +451,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   </div>
 
   <section class="compose" id="composeView" hidden></section>
+  <section class="compose rev" id="reviewView" hidden></section>
 
   <footer>
     <p>Banque de chants de l'équipe d'animation, Saint-Jean-Baptiste Montréal.</p>
@@ -404,7 +473,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   var CODE_KEY = 'chants-baptiste:code';
 
   var state = {
-    chants: [], tagLabels: new Map(),
+    chants: [], tagLabels: new Map(), couleurs: {},
     type: 'Chant', q: '', tags: new Set(), sort: 'az',
     shown: PAGE, tagsOpen: false,
     edit: false, code: null, loaded: false, failed: false,
@@ -479,6 +548,22 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   function hideToast() { $('#toast').classList.remove('show'); }
 
   /* ---------- Données ---------- */
+  /* Couleurs des tags : choisie sur le site, sinon couleur de base, sinon automatique (stable pour un même tag) */
+  var COULEURS = ['bleu', 'ciel', 'vert', 'olive', 'jaune', 'orange', 'rouge', 'rose', 'violet', 'gris'];
+  var COULEURS_BASE = {
+    'entree': 'bleu', 'communion': 'orange', 'envoi': 'vert', 'offertoire': 'jaune',
+    'action de grace': 'violet', 'priere universelle': 'ciel', 'alleluia': 'rose',
+    'sanctus': 'olive', 'anamnese': 'olive', 'agnus': 'olive', 'psaume': 'gris'
+  };
+  function couleurDe(k) {
+    if (state.couleurs && state.couleurs[k]) return state.couleurs[k];
+    if (COULEURS_BASE[k]) return COULEURS_BASE[k];
+    var n = 0;
+    for (var i = 0; i < k.length; i++) n = (n * 31 + k.charCodeAt(i)) >>> 0;
+    return COULEURS.slice(0, 9)[n % 9];
+  }
+  function tc(k) { return 'tc-' + couleurDe(k); }
+
   function indexer(c) {
     c._t = norm(c.titre);
     c._g = c.tags.map(norm).filter(Boolean);
@@ -503,7 +588,8 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     });
   }
 
-  function appliquer(chants, maj) {
+  function appliquer(chants, maj, couleurs) {
+    if (couleurs && typeof couleurs === 'object') state.couleurs = couleurs;
     state.chants = chants.map(indexer);
     state.loaded = true;
     state.failed = false;
@@ -519,20 +605,21 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     try { return JSON.parse(localStorage.getItem(CACHE_KEY)); } catch (e) { return null; }
   }
   function ecrireCache(chants, maj) {
-    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ chants: chants, maj: maj })); } catch (e) { /* stockage indisponible */ }
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify({ chants: chants, maj: maj, couleurs: state.couleurs })); } catch (e) { /* stockage indisponible */ }
   }
 
   function charger(avecMessage) {
     if (!state.loaded) {
       var cache = lireCache();
-      if (cache && Array.isArray(cache.chants)) appliquer(cache.chants, cache.maj);
+      if (cache && Array.isArray(cache.chants)) appliquer(cache.chants, cache.maj, cache.couleurs);
     }
     return fetch(API_URL + '?action=list', { cache: 'no-store' })
       .then(function (r) { return r.json(); })
       .then(function (data) {
         if (!data || !data.ok) throw new Error('reponse');
+        if (data.couleurs) state.couleurs = data.couleurs;
         ecrireCache(data.chants, data.maj);
-        appliquer(data.chants, data.maj);
+        appliquer(data.chants, data.maj, data.couleurs);
         if (avecMessage) toast('Liste actualisée.');
       })
       .catch(function () {
@@ -583,10 +670,13 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       state.chants.push(indexer(chant));
     }
     calculerLabels();
-    ecrireCache(state.chants.map(function (c) {
-      return { id: c.id, titre: c.titre, type: c.type, tags: c.tags, lien: c.lien, partition: c.partition || '', derniere: c.derniere, nb: c.nb, prochaine: c.prochaine, statut: c.statut };
-    }), new Date().toISOString());
+    ecrireCache(chantsPourCache(), new Date().toISOString());
     render();
+  }
+  function chantsPourCache() {
+    return state.chants.map(function (c) {
+      return { id: c.id, titre: c.titre, type: c.type, tags: c.tags, lien: c.lien, partition: c.partition || '', paroles: c.paroles || '', derniere: c.derniere, nb: c.nb, prochaine: c.prochaine, statut: c.statut };
+    });
   }
 
   /* ---------- Filtrage et tri ---------- */
@@ -665,7 +755,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     section.hidden = total === 0;
     if (total === 0) return;
 
-    var limit = state.tagsOpen ? Infinity : Math.max(COLLAPSED_TAGS, selKeys.length);
+    var limit = Math.max(COLLAPSED_TAGS, selKeys.length);
     var shownKeys = selKeys.concat(keys).slice(0, limit);
 
     var box = $('#tagList');
@@ -674,20 +764,14 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       var actif = state.tags.has(k);
       var label = state.tagLabels.get(k) || k;
       box.appendChild(h('button', {
-        class: 'chip', type: 'button', 'aria-pressed': String(actif),
+        class: 'chip ' + tc(k), type: 'button', 'aria-pressed': String(actif),
         onclick: function () { basculerTag(k, false); }
       }, label, actif ? null : h('span', { class: 'n' }, String(counts.get(k) || 0))));
     });
 
     var more = $('#tagMore');
-    var hidden = total - shownKeys.length;
-    if (state.tagsOpen && total > COLLAPSED_TAGS) {
-      more.hidden = false; more.textContent = 'Voir moins de tags';
-    } else if (hidden > 0) {
-      more.hidden = false; more.textContent = 'Voir les ' + total + ' tags';
-    } else {
-      more.hidden = true;
-    }
+    more.hidden = !(total > shownKeys.length || state.edit);
+    more.textContent = state.edit ? 'Tous les tags et leurs couleurs (' + total + ')' : 'Tous les tags (' + total + ')';
   }
 
   function metaTexte(c) {
@@ -708,7 +792,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     }).map(function (t) {
       var k = norm(t);
       return h('button', {
-        class: 'chip small', type: 'button', 'aria-pressed': String(state.tags.has(k)),
+        class: 'chip small ' + tc(k), type: 'button', 'aria-pressed': String(state.tags.has(k)),
         onclick: function () { basculerTag(k, true); }
       }, state.tagLabels.get(k) || t);
     });
@@ -720,11 +804,11 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
         'aria-label': 'Écouter ' + c.titre
       }, icon('play', 18), h('span', { class: 'lbl' }, 'Écouter')));
     }
-    if (c.partition && /^https?:\/\//i.test(c.partition)) {
-      actions.appendChild(h('a', {
-        class: 'iconbtn', href: c.partition, target: '_blank', rel: 'noopener noreferrer',
-        'aria-label': 'Partition de ' + c.titre
-      }, icon('doc', 18), h('span', { class: 'lbl' }, 'Partition')));
+    if (c.paroles || c.partition || c.lien) {
+      actions.appendChild(h('button', {
+        class: 'iconbtn', type: 'button', 'aria-label': 'Paroles, partition et vidéo de ' + c.titre,
+        onclick: function () { ouvrirParoles(c); }
+      }, icon('doc', 18), h('span', { class: 'lbl' }, 'Paroles')));
     }
     if (state.edit) {
       actions.appendChild(h('button', {
@@ -799,7 +883,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   }
 
   function renderEditUi() {
-    $('#editbar').hidden = !state.edit || state.view === 'messe';
+    $('#editbar').hidden = !state.edit || state.view !== 'banque';
     var b = $('#btnEdit');
     b.hidden = state.edit;
     b.replaceChildren(icon('lock', 18), document.createTextNode('Édition'));
@@ -920,6 +1004,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     var titre = h('input', { type: 'text', id: 'f-titre', value: chant ? chant.titre : (titrePrefill || ''), autocomplete: 'off', required: true, maxlength: '150', autofocus: nouveau });
     var lien = h('input', { type: 'url', id: 'f-lien', value: chant ? chant.lien : '', placeholder: 'https://…', autocomplete: 'off', inputmode: 'url' });
     var partition = h('input', { type: 'url', id: 'f-partition', value: chant ? (chant.partition || '') : '', placeholder: 'https://…', autocomplete: 'off', inputmode: 'url' });
+    var paroles = h('textarea', { id: 'f-paroles', rows: '5', maxlength: '20000', placeholder: 'https://… ou le texte des paroles' }, chant ? (chant.paroles || '') : '');
     var zoneErr = h('p', { class: 'err', role: 'alert' });
     zoneErr.hidden = true;
 
@@ -944,7 +1029,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     function dessinerTags() {
       tagBox.replaceChildren();
       tags.forEach(function (t) {
-        tagBox.appendChild(h('span', { class: 'chip editable' }, t,
+        tagBox.appendChild(h('span', { class: 'chip editable ' + tc(norm(t)) }, t,
           h('button', {
             type: 'button', 'aria-label': 'Retirer le tag ' + t,
             onclick: function () { tags.splice(tags.indexOf(t), 1); dessinerTags(); tagInput.focus(); }
@@ -999,8 +1084,9 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       h('label', { class: 'field', for: 'f-titre' }, 'Titre', titre),
       h('div', { class: 'field' }, 'Type', h('div', { class: 'seg', role: 'group', 'aria-label': 'Type' }, btnChant, btnOrd)),
       h('div', { class: 'field' }, h('label', { for: 'f-tags' }, 'Tags'), tagBox, suggestions),
-      h('label', { class: 'field', for: 'f-lien' }, 'Audio : lien pour écouter (facultatif)', lien),
+      h('label', { class: 'field', for: 'f-lien' }, 'Audio ou vidéo : lien pour écouter (facultatif)', lien),
       h('label', { class: 'field', for: 'f-partition' }, 'Partition : lien (facultatif)', partition),
+      h('label', { class: 'field', for: 'f-paroles' }, 'Paroles : un lien vers une page, ou le texte (facultatif)', paroles),
       zoneErr,
       actions);
 
@@ -1011,7 +1097,7 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       if (!t) { zoneErr.hidden = false; zoneErr.textContent = 'Le titre est obligatoire.'; titre.focus(); return; }
       zoneErr.hidden = true;
       enregistrer.disabled = true; enregistrer.textContent = 'Enregistrement…';
-      var donnees = { titre: t, type: type, tags: tags, lien: lien.value.trim(), partition: partition.value.trim() };
+      var donnees = { titre: t, type: type, tags: tags, lien: lien.value.trim(), partition: partition.value.trim(), paroles: paroles.value.trim() };
       if (!nouveau) donnees.id = chant.id;
       appel(nouveau ? 'ajouter' : 'modifier', donnees).then(function (data) {
         majLocale(data.chant);
@@ -1024,6 +1110,115 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     });
 
     ouvrirDlg(form);
+  }
+
+  function lienBtn(url, texte, ico) {
+    return h('a', { class: 'btn', href: url, target: '_blank', rel: 'noopener noreferrer' }, icon(ico, 18), texte);
+  }
+  function estUrl(v) { return /^https?:\/\//i.test(String(v || '').trim()); }
+
+  function ouvrirParoles(c) {
+    var liens = h('div', { class: 'linkrow' });
+    if (estUrl(c.lien)) liens.appendChild(lienBtn(c.lien, 'Écouter / voir la vidéo', 'play'));
+    if (estUrl(c.partition)) liens.appendChild(lienBtn(c.partition, 'Partition', 'doc'));
+    if (estUrl(c.paroles)) liens.appendChild(lienBtn(c.paroles, 'Paroles (page web)', 'doc'));
+    var manque = [];
+    if (!c.paroles) manque.push('paroles');
+    if (!estUrl(c.partition)) manque.push('partition');
+    if (!estUrl(c.lien)) manque.push('vidéo');
+    ouvrirDlg(
+      h('h2', null, c.titre),
+      liens.childNodes.length ? liens : null,
+      c.paroles && !estUrl(c.paroles) ? h('div', { class: 'lyrics' }, c.paroles) : null,
+      manque.length ? h('p', { class: 'hint', style: 'margin:16px 0 0' }, 'Pas encore : ' + manque.join(', ') + '.') : null,
+      h('div', { class: 'dlg-actions' },
+        state.edit ? h('button', { class: 'btn', type: 'button', onclick: function () { ouvrirFormulaire(c); } }, 'Modifier') : null,
+        h('button', { class: 'btn', type: 'button', onclick: fermerDlg }, 'Fermer')));
+  }
+
+  function ouvrirTags() {
+    var recherche = h('input', { type: 'search', class: 'pickersearch', placeholder: 'Chercher un tag', 'aria-label': 'Chercher un tag', autocomplete: 'off', autocapitalize: 'off', spellcheck: 'false' });
+    var liste = h('div', { class: 'taglist' });
+    var zoneErr = h('p', { class: 'err', role: 'alert' });
+    zoneErr.hidden = true;
+    var fin = h('button', { class: 'btn primary', type: 'button', onclick: fermerDlg });
+    var ouvert = null;
+
+    function compter() {
+      var m = new Map();
+      state.chants.forEach(function (c) {
+        if (c.type !== state.type) return;
+        new Set(c._g).forEach(function (k) { m.set(k, (m.get(k) || 0) + 1); });
+      });
+      return m;
+    }
+    function choisirCouleur(k, key) {
+      var label = state.tagLabels.get(k) || k;
+      var avant = state.couleurs[k];
+      if (key) state.couleurs[k] = key; else delete state.couleurs[k];
+      render(); dessiner();
+      appel('couleur_tag', { tag: label, couleur: key }).then(function (d) {
+        state.couleurs = d.couleurs || state.couleurs;
+        ecrireCache(chantsPourCache(), new Date().toISOString());
+        render(); dessiner();
+      }).catch(function (err) {
+        if (avant) state.couleurs[k] = avant; else delete state.couleurs[k];
+        render(); dessiner();
+        gererErreur(err, zoneErr);
+      });
+    }
+    function palette(k) {
+      var actuelle = state.couleurs[k] || '';
+      var box = h('div', { class: 'palette', role: 'group', 'aria-label': 'Couleur du tag' });
+      COULEURS.forEach(function (key) {
+        box.appendChild(h('button', {
+          class: 'swatch tc-' + key, type: 'button', 'aria-label': key, 'aria-pressed': String(actuelle === key),
+          onclick: function () { choisirCouleur(k, key); }
+        }));
+      });
+      box.appendChild(h('button', {
+        class: 'swatch auto', type: 'button', 'aria-pressed': String(!actuelle),
+        onclick: function () { choisirCouleur(k, ''); }
+      }, 'Auto'));
+      return box;
+    }
+    function dessiner() {
+      var q = norm(recherche.value);
+      var counts = compter();
+      var keys = Array.from(counts.keys()).filter(function (k) { return !q || k.indexOf(q) !== -1; });
+      keys.sort(function (a, b) {
+        return (state.tags.has(b) - state.tags.has(a)) || (counts.get(b) - counts.get(a)) ||
+          (state.tagLabels.get(a) || a).localeCompare(state.tagLabels.get(b) || b, 'fr', { sensitivity: 'base' });
+      });
+      liste.replaceChildren();
+      if (!keys.length) liste.appendChild(h('p', { class: 'hint' }, 'Aucun tag ne correspond.'));
+      keys.forEach(function (k) {
+        var row = h('div', { class: 'tagrow' },
+          h('button', {
+            class: 'chip ' + tc(k), type: 'button', 'aria-pressed': String(state.tags.has(k)),
+            onclick: function () { basculerTag(k, false); dessiner(); }
+          }, state.tagLabels.get(k) || k, h('span', { class: 'n' }, String(counts.get(k)))),
+          state.edit ? h('button', {
+            class: 'linkbtn', type: 'button', 'aria-expanded': String(ouvert === k),
+            onclick: function () { ouvert = ouvert === k ? null : k; dessiner(); }
+          }, 'Couleur') : null);
+        liste.appendChild(row);
+        if (state.edit && ouvert === k) liste.appendChild(palette(k));
+      });
+      var n = calcul().items.length;
+      fin.textContent = 'Voir les ' + n + (state.type === 'Ordinaire' ? ' ordinaire' : ' chant') + (n > 1 ? 's' : '');
+    }
+    recherche.addEventListener('input', dessiner);
+    ouvrirDlg(
+      h('h2', null, 'Tous les tags'),
+      h('p', { class: 'hint' }, state.edit
+        ? 'Touche des tags pour filtrer. « Couleur » change la teinte d\'un tag pour toute l\'équipe.'
+        : 'Touche un ou plusieurs tags pour filtrer la liste.'),
+      recherche, liste, zoneErr,
+      h('div', { class: 'dlg-actions' },
+        fin,
+        h('button', { class: 'btn', type: 'button', onclick: function () { state.tags = new Set(); state.shown = PAGE; render(); dessiner(); } }, 'Tout décocher')));
+    dessiner();
   }
 
   function ouvrirCorbeille() {
@@ -1079,6 +1274,9 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     { key: 'envoi', label: 'Envoi', tag: 'Envoi' },
     { key: 'autres', label: 'Autres chants', multi: true }
   ];
+  var NOMS_MESSE = ['Veillée pascale', 'Dimanche des Rameaux', 'Jeudi saint', 'Vendredi saint', 'Dimanche de Pâques', 'Messe de la nuit de Noël', 'Messe du jour de Noël',
+    'Sainte Famille', 'Épiphanie', 'Mercredi des Cendres', 'Ascension', 'Pentecôte', 'Fête du Christ-Roi', 'Toussaint', 'Commémoration des défunts',
+    'Assomption', 'Fête de saint Jean-Baptiste', 'Immaculée Conception', 'Messe de la rentrée'];
   var mass = chargerMesse();
   var apercuUrl = null;
 
@@ -1091,11 +1289,11 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     d.setDate(d.getDate() + ((7 - d.getDay()) % 7));
     return isoLocal(d);
   }
-  function messeVide() { return { date: prochainDimanche(), items: {} }; }
+  function messeVide() { return { date: prochainDimanche(), nom: '', items: {} }; }
   function chargerMesse() {
     try {
       var m = JSON.parse(sessionStorage.getItem(MASS_KEY));
-      if (m && typeof m.date === 'string' && m.items && typeof m.items === 'object') return m;
+      if (m && typeof m.date === 'string' && m.items && typeof m.items === 'object') { if (typeof m.nom !== 'string') m.nom = ''; return m; }
     } catch (e) { /* rien */ }
     return messeVide();
   }
@@ -1148,7 +1346,10 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     var lignes = lignesMesse();
     if (!lignes.length) return '';
     var d = dateLongue(false);
-    var t = [d ? 'Messe du ' + d : 'Messe', 'Saint-Jean-Baptiste Montréal', ''];
+    var nom = String(mass.nom || '').replace(/\s+/g, ' ').trim();
+    var t = [];
+    if (nom) t.push(nom);
+    t.push(d ? 'Messe du ' + d : 'Messe', 'Saint-Jean-Baptiste Montréal', '');
     lignes.forEach(function (l) {
       l.items.forEach(function (r) {
         t.push(l.nom + ' : ' + r.titre);
@@ -1162,22 +1363,25 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
   /* Affichage */
   function afficherVue(v) {
     state.view = v;
-    var messe = v === 'messe';
-    $('#bankView').hidden = messe;
-    $('#composeView').hidden = !messe;
-    $('#ctaRow').hidden = messe;
-    if (messe) { renderMesse(); renderEditUi(); } else { render(); }
+    $('#bankView').hidden = v !== 'banque';
+    $('#composeView').hidden = v !== 'messe';
+    $('#reviewView').hidden = v !== 'revue';
+    $('#ctaRow').hidden = v !== 'banque';
+    if (v === 'messe') { renderMesse(); renderEditUi(); }
+    else if (v === 'revue') { renderRevue(); renderEditUi(); }
+    else { render(); }
     window.scrollTo(0, 0);
   }
-  function ouvrirMesse() {
-    try { history.pushState({ messe: 1 }, ''); } catch (e) { /* rien */ }
-    afficherVue('messe');
+  function ouvrirVue(v) {
+    try { history.pushState({ vue: v }, ''); } catch (e) { /* rien */ }
+    afficherVue(v);
   }
+  function ouvrirMesse() { ouvrirVue('messe'); }
   function fermerMesse() {
-    if (history.state && history.state.messe) history.back(); else afficherVue('banque');
+    if (history.state && history.state.vue) history.back(); else afficherVue('banque');
   }
   window.addEventListener('popstate', function () {
-    if (state.view === 'messe') afficherVue('banque');
+    if (state.view !== 'banque') afficherVue('banque');
   });
 
   function renderMesse() {
@@ -1187,6 +1391,10 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       h('button', { class: 'btn small', type: 'button', onclick: fermerMesse }, 'Retour à la banque')));
     root.appendChild(h('h2', { class: 'ctitle' }, 'Préparer une messe'));
     root.appendChild(h('p', { class: 'lead' }, 'Rien n\'est enregistré sur le site : compose la messe, puis copie le texte ou télécharge l\'image.'));
+    var nomIn = h('input', { type: 'text', id: 'm-nom', value: mass.nom || '', list: 'm-noms', maxlength: '80', autocomplete: 'off', placeholder: 'Ex. : Veillée pascale' });
+    nomIn.addEventListener('input', function () { mass.nom = nomIn.value; sauverMesse(); majExport(); });
+    root.appendChild(h('label', { class: 'datefield', for: 'm-nom' }, 'Nom de la messe (facultatif)', nomIn,
+      h('datalist', { id: 'm-noms' }, NOMS_MESSE.map(function (n) { return h('option', { value: n }); }))));
     var dateIn = h('input', { type: 'date', id: 'm-date', value: mass.date });
     dateIn.addEventListener('input', function () { mass.date = dateIn.value; sauverMesse(); majExport(); });
     root.appendChild(h('label', { class: 'datefield', for: 'm-date' }, 'Date de la messe', dateIn));
@@ -1449,6 +1657,9 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
         return out;
       }
 
+      var F_NOM = '600 36px ' + SANS;
+      var nomMesse = String(mass.nom || '').replace(/\s+/g, ' ').trim();
+      var nomLignes = nomMesse ? couper(nomMesse, F_NOM) : [];
       var enTete = couper(dateLongue(true) || 'Messe', F_DATE);
       var rangees = [];
       lignes.forEach(function (l) {
@@ -1458,7 +1669,8 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
         });
       });
 
-      var yDate = 160;
+      var yNom = 118;
+      var yDate = nomLignes.length ? yNom + (nomLignes.length - 1) * 48 + 88 : 160;
       var ySous = yDate + (enTete.length - 1) * 96 + 66;
       var yPortee = ySous + 70;
       var yDebut = yPortee + 64 + 96;
@@ -1471,6 +1683,11 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       c.fillStyle = '#F6F2EA';
       c.fillRect(0, 0, W, H);
 
+      if (nomLignes.length) {
+        c.fillStyle = '#213B73';
+        c.font = F_NOM;
+        nomLignes.forEach(function (t, i) { c.fillText(t, PAD, yNom + i * 48); });
+      }
       c.fillStyle = '#27221D';
       c.font = F_DATE;
       enTete.forEach(function (t, i) { c.fillText(t, PAD, yDate + i * 96); });
@@ -1524,6 +1741,357 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
     });
   }
 
+  /* ---------- Compléter la banque avec un agent IA ----------
+     1) on exporte un lot de chants + le prompt, 2) l'agent renvoie du JSON, 3) on coche ici ce qu'on garde. */
+  var PROMPT_AGENT = [
+    'Tu m\'aides à compléter la banque de chants d\'une paroisse catholique francophone (Saint-Jean-Baptiste, Montréal).',
+    'Je te donne un fichier JSON : « tags_existants » (les tags déjà utilisés) et « chants » (une liste avec id, titre, type, tags actuels, et « manque » = ce qui n\'est pas encore renseigné parmi paroles, video, partition).',
+    '',
+    'POUR CHAQUE CHANT, avec ta recherche web :',
+    '1. Identifie le chant (titre, compositeur ou auteur, recueil si possible). « type » vaut Chant ou Ordinaire (un ordinaire est une version d\'Ordinaire de la messe : Kyrie, Gloria, Sanctus, Agnus… ; son titre est souvent le nom de la version, par exemple « Messe de saint Jean »).',
+    '2. Pour chaque élément listé dans « manque », cherche UN lien :',
+    '   - paroles : une page web qui affiche les paroles (ne copie PAS les paroles toi-même, donne seulement le lien) ;',
+    '   - video : une vidéo ou un audio du bon chant (YouTube de préférence : version officielle, chorale ou communauté connue) ;',
+    '   - partition : un PDF ou une page de partition.',
+    '3. Propose de 1 à 4 tags : réutilise de préférence les « tags_existants » ; tu peux en créer de nouveaux s\'ils sont utiles. Pense au temps liturgique (Avent, Noël, Carême, Pâques, Temps ordinaire…), au moment de la messe (Entrée, Communion, Envoi, Offertoire, Action de grâce, Prière universelle…), au thème (Marie, Esprit Saint, louange, pardon, eucharistie, confiance, mission…) et à l\'ambiance si c\'est utile. Un tag = un ou deux mots, commence par une majuscule.',
+    '',
+    'RÈGLES IMPORTANTES',
+    '- N\'invente JAMAIS un lien. Ne donne que des adresses que tu as réellement ouvertes ou vues dans tes résultats, commençant par https://.',
+    '- Si tu n\'es pas sûr que c\'est bien CE chant (même titre mais autre chant, autre version…), mets null. Mieux vaut ne rien proposer qu\'une erreur.',
+    '- « confiance » : "haute" = je suis certain que c\'est le bon chant ; "moyenne" = probable mais à vérifier ; "faible" = incertain (évite d\'en donner).',
+    '- Pour chaque lien, ajoute si possible « source » : une courte phrase (site, chaîne ou auteur).',
+    '- Si le titre est un nom local ambigu (par exemple un Ordinaire appelé « St Jean »), mets null sauf si tu en es certain.',
+    '',
+    'FORMAT DE LA RÉPONSE : uniquement un tableau JSON valide, sans texte avant ni après, un objet par chant, avec exactement l\'id reçu :',
+    '[',
+    '  {',
+    '    "id": "A1b2c3",',
+    '    "paroles":   { "url": "https://…", "confiance": "haute", "source": "…" },',
+    '    "video":     { "url": "https://www.youtube.com/watch?v=…", "confiance": "moyenne", "source": "…" },',
+    '    "partition": null,',
+    '    "tags": [ { "tag": "Noël", "confiance": "haute" }, { "tag": "Entrée", "confiance": "moyenne" } ],',
+    '    "note": "remarque courte facultative"',
+    '  }',
+    ']',
+    'Mets null pour un élément non trouvé ou déjà renseigné. Réponds sur tous les chants du fichier, sans en sauter.'
+  ].join('\n');
+
+  var revue = { items: [] };
+  var revueOpts = { seulManque: true, taille: 30, lot: 0 };
+
+  function manques(c) {
+    var m = [];
+    if (!c.paroles) m.push('paroles');
+    if (!c.lien) m.push('video');
+    if (!c.partition) m.push('partition');
+    return m;
+  }
+  function listeExport() {
+    return state.chants.filter(function (c) { return !revueOpts.seulManque || manques(c).length; })
+      .sort(function (a, b) { return a.titre.localeCompare(b.titre, 'fr', { sensitivity: 'base' }); });
+  }
+  function lotExport() {
+    var liste = listeExport();
+    var deb = revueOpts.lot * revueOpts.taille;
+    var counts = new Map();
+    state.chants.forEach(function (c) { new Set(c._g).forEach(function (k) { counts.set(k, (counts.get(k) || 0) + 1); }); });
+    var tags = Array.from(counts.keys()).sort(function (a, b) { return counts.get(b) - counts.get(a); })
+      .map(function (k) { return state.tagLabels.get(k) || k; });
+    return JSON.stringify({
+      tags_existants: tags,
+      chants: liste.slice(deb, deb + revueOpts.taille).map(function (c) {
+        return { id: c.id, titre: c.titre, type: c.type, tags: c.tags, manque: manques(c) };
+      })
+    }, null, 1);
+  }
+
+  function copierBrut(texte, ok) {
+    function secours() {
+      var z = h('textarea', { style: 'position:fixed;opacity:0;top:0' });
+      z.value = texte;
+      document.body.appendChild(z);
+      z.focus(); z.select();
+      var bon = false;
+      try { bon = document.execCommand('copy'); } catch (e) { /* rien */ }
+      z.remove();
+      toast(bon ? ok : 'Copie impossible ici : utilise « Télécharger ».');
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texte).then(function () { toast(ok); }, secours);
+    } else { secours(); }
+  }
+  function telechargerTexte(nom, texte, type) {
+    var url = URL.createObjectURL(new Blob([texte], { type: type || 'application/json' }));
+    var a = h('a', { href: url, download: nom });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 15000);
+  }
+
+  function renderRevue() {
+    var root = $('#reviewView');
+    root.replaceChildren();
+    root.appendChild(h('div', { class: 'compose-top' },
+      h('button', { class: 'btn small', type: 'button', onclick: fermerMesse }, 'Retour à la banque')));
+    root.appendChild(h('h2', { class: 'ctitle' }, 'Compléter avec un agent IA'));
+    root.appendChild(h('p', { class: 'lead' }, 'Un agent IA qui peut chercher sur le web propose des liens (paroles, vidéo, partition) et des tags. Rien n\'est enregistré avant que tu aies coché.'));
+
+    root.appendChild(h('h3', null, '1. Donner un lot de chants à l\'agent'));
+    root.appendChild(h('div', { id: 'revExport' }));
+
+    root.appendChild(h('h3', null, '2. Valider sa réponse'));
+    var fichier = h('input', { type: 'file', accept: '.json,.txt,application/json,text/plain', 'aria-label': 'Fichier de réponse de l\'agent' });
+    var zone = h('textarea', { class: 'paste', placeholder: 'ou colle ici la réponse de l\'agent (le tableau JSON)', 'aria-label': 'Réponse de l\'agent' });
+    var err = h('p', { class: 'err', role: 'alert' });
+    err.hidden = true;
+    function charger1(texte) {
+      try {
+        revue.items = lireSuggestions(texte);
+        err.hidden = true;
+        dessinerRevue();
+      } catch (e) {
+        err.hidden = false;
+        err.textContent = e.message || 'Lecture impossible.';
+      }
+    }
+    fichier.addEventListener('change', function () {
+      var f = fichier.files && fichier.files[0];
+      if (!f) return;
+      var lecteur = new FileReader();
+      lecteur.onload = function () { charger1(String(lecteur.result)); };
+      lecteur.readAsText(f);
+    });
+    root.appendChild(h('p', { class: 'hint' }, 'Choisis le fichier de réponse de l\'agent, ou colle son texte plus bas :'));
+    root.appendChild(fichier);
+    root.appendChild(zone);
+    root.appendChild(h('button', { class: 'btn primary', type: 'button', onclick: function () { charger1(zone.value); } }, 'Lire les suggestions'));
+    root.appendChild(err);
+    root.appendChild(h('div', { id: 'revListe' }));
+    majExportAgent();
+    dessinerRevue();
+  }
+
+  function majExportAgent() {
+    var box = $('#revExport');
+    if (!box) return;
+    var liste = listeExport();
+    var nLots = Math.max(1, Math.ceil(liste.length / revueOpts.taille));
+    if (revueOpts.lot >= nLots) revueOpts.lot = 0;
+
+    var cb = h('input', { type: 'checkbox' });
+    cb.checked = revueOpts.seulManque;
+    cb.addEventListener('change', function () { revueOpts.seulManque = cb.checked; revueOpts.lot = 0; majExportAgent(); });
+    var taille = h('select', { 'aria-label': 'Chants par lot' });
+    [15, 30, 50].forEach(function (n) {
+      var o = h('option', { value: String(n) }, n + ' chants par lot');
+      if (n === revueOpts.taille) o.selected = true;
+      taille.appendChild(o);
+    });
+    taille.addEventListener('change', function () { revueOpts.taille = Number(taille.value); revueOpts.lot = 0; majExportAgent(); });
+    var lot = h('select', { 'aria-label': 'Numéro du lot' });
+    for (var i = 0; i < nLots; i++) {
+      var a = i * revueOpts.taille + 1, b = Math.min(liste.length, (i + 1) * revueOpts.taille);
+      var o = h('option', { value: String(i) }, 'Lot ' + (i + 1) + ' (chants ' + a + ' à ' + b + ')');
+      if (i === revueOpts.lot) o.selected = true;
+      lot.appendChild(o);
+    }
+    lot.addEventListener('change', function () { revueOpts.lot = Number(lot.value); });
+
+    var prompt = h('pre', { class: 'prompt', hidden: true }, PROMPT_AGENT);
+    box.replaceChildren(
+      h('p', { class: 'hint' }, 'Fais le travail par petits lots : l\'agent reste plus précis. Donne-lui le fichier du lot et le prompt, dans cet ordre.'),
+      h('label', { class: 'check' }, cb, 'Seulement les chants à qui il manque quelque chose (' + liste.length + ')'),
+      h('div', { class: 'opts' }, taille, lot),
+      h('div', { class: 'export-actions' },
+        h('button', { class: 'btn primary', type: 'button', onclick: function () { telechargerTexte('chants-lot-' + (revueOpts.lot + 1) + '.json', lotExport()); } }, 'Télécharger le lot'),
+        h('button', { class: 'btn', type: 'button', onclick: function () { copierBrut(lotExport(), 'Lot copié.'); } }, 'Copier le lot'),
+        h('button', { class: 'btn', type: 'button', onclick: function () { copierBrut(PROMPT_AGENT, 'Prompt copié.'); } }, 'Copier le prompt')),
+      h('p', null, h('button', { class: 'linkbtn', type: 'button', onclick: function () { prompt.hidden = !prompt.hidden; } }, 'Voir / cacher le prompt')),
+      prompt);
+  }
+
+  /* Lecture tolérante de la réponse de l'agent */
+  function confiance(v) {
+    var c = norm(v || '');
+    return c === 'haute' || c === 'sure' || c === 'certaine' ? 'haute' : c === 'faible' ? 'faible' : 'moyenne';
+  }
+  function champSug(v) {
+    if (!v) return null;
+    var url = typeof v === 'string' ? v : v.url;
+    url = String(url || '').trim();
+    if (!estUrl(url) || url.length > 500) return null;
+    return { url: url, conf: typeof v === 'string' ? 'moyenne' : confiance(v.confiance), source: typeof v === 'string' ? '' : String(v.source || '').slice(0, 160) };
+  }
+  function majuscule(t) { t = String(t).replace(/\s+/g, ' ').trim(); return t.charAt(0).toUpperCase() + t.slice(1); }
+
+  function lireSuggestions(texte) {
+    var brut = String(texte || '').trim().replace(/^```[a-z]*\s*/i, '').replace(/```\s*$/, '').trim();
+    if (!brut) throw new Error('Rien à lire : colle la réponse de l\'agent ou choisis son fichier.');
+    var data;
+    try { data = JSON.parse(brut); } catch (e) {
+      var i = brut.indexOf('['), j = brut.lastIndexOf(']');
+      try { data = JSON.parse(brut.slice(i, j + 1)); } catch (e2) {
+        throw new Error('Ce texte n\'est pas du JSON valide. Demande à l\'agent de répondre uniquement avec le tableau JSON.');
+      }
+    }
+    var arr = Array.isArray(data) ? data : (data && (data.suggestions || data.chants)) || [];
+    if (!Array.isArray(arr) || !arr.length) throw new Error('Aucune suggestion trouvée dans ce texte.');
+    var items = [], ignores = 0;
+    arr.forEach(function (s) {
+      if (!s || typeof s !== 'object') { ignores++; return; }
+      var c = state.chants.find(function (x) { return s.id && x.id === String(s.id); }) ||
+        (s.titre ? state.chants.find(function (x) { return norm(x.titre) === norm(s.titre); }) : null);
+      if (!c) { ignores++; return; }
+      var props = [];
+      [['paroles', 'paroles', 'Paroles'], ['video', 'lien', 'Vidéo / audio'], ['partition', 'partition', 'Partition']].forEach(function (d) {
+        var f = champSug(s[d[0]] !== undefined ? s[d[0]] : s[d[0] + '_url']);
+        if (!f || f.url === c[d[1]]) return;
+        var actuel = c[d[1]] || '';
+        props.push({ champ: d[1], nom: d[2], url: f.url, conf: f.conf, source: f.source, actuel: actuel, coche: f.conf === 'haute' && !actuel });
+      });
+      var deja = new Set(c._g);
+      var vus = new Set();
+      var tags = [];
+      (Array.isArray(s.tags) ? s.tags : []).forEach(function (t) {
+        var label = majuscule(typeof t === 'string' ? t : (t && t.tag) || '');
+        var k = norm(label);
+        if (!k || label.length > 40 || deja.has(k) || vus.has(k)) return;
+        vus.add(k);
+        var conf = typeof t === 'string' ? 'moyenne' : confiance(t.confiance);
+        tags.push({ label: state.tagLabels.get(k) || label, k: k, conf: conf, nouveau: !state.tagLabels.has(k), coche: conf === 'haute' });
+      });
+      if (!props.length && !tags.length) return;
+      items.push({ chant: c, props: props, tags: tags, note: String(s.note || '').slice(0, 300) });
+    });
+    if (!items.length) throw new Error('Rien de nouveau dans cette réponse' + (ignores ? ' (' + ignores + ' entrée' + (ignores > 1 ? 's' : '') + ' sans chant correspondant)' : '') + '.');
+    items.ignores = ignores;
+    return items;
+  }
+
+  function nbCoches() {
+    var n = 0;
+    revue.items.forEach(function (it) {
+      it.props.forEach(function (p) { if (p.coche) n++; });
+      it.tags.forEach(function (t) { if (t.coche) n++; });
+    });
+    return n;
+  }
+  function libelleConf(c) { return c === 'haute' ? 'sûr' : c === 'faible' ? 'peu sûr' : 'à vérifier'; }
+  function urlCourte(u) {
+    try { var x = new URL(u); return x.hostname.replace(/^www\./, '') + (x.pathname.length > 1 ? x.pathname : ''); } catch (e) { return u; }
+  }
+
+  function dessinerRevue() {
+    var zone = $('#revListe');
+    if (!zone) return;
+    zone.replaceChildren();
+    if (!revue.items.length) return;
+
+    var compteur = h('strong');
+    var btnSave = h('button', { class: 'btn primary', type: 'button' });
+    function majBarre() {
+      var n = nbCoches();
+      compteur.textContent = n + ' coché' + (n > 1 ? 's' : '');
+      btnSave.textContent = 'Enregistrer les ' + n + ' coché' + (n > 1 ? 's' : '');
+      btnSave.disabled = n === 0;
+    }
+    function toutCocher(fn) {
+      revue.items.forEach(function (it) {
+        it.props.forEach(function (p) { p.coche = fn(p); });
+        it.tags.forEach(function (t) { t.coche = fn(t); });
+      });
+      dessinerRevue();
+    }
+    zone.appendChild(h('div', { class: 'export-actions', style: 'margin-top:18px' },
+      h('button', { class: 'btn', type: 'button', onclick: function () { toutCocher(function (x) { return x.conf === 'haute' && !x.actuel; }); } }, 'Cocher ce qui est sûr'),
+      h('button', { class: 'btn', type: 'button', onclick: function () { toutCocher(function () { return false; }); } }, 'Tout décocher')));
+    zone.appendChild(h('p', { class: 'hint', style: 'margin:10px 0 0' },
+      revue.items.length + ' chant' + (revue.items.length > 1 ? 's' : '') + ' avec des suggestions. Ouvre les liens pour vérifier ; les éléments « sûrs » sont déjà cochés.'));
+
+    revue.items.forEach(function (it) {
+      var carte = h('div', { class: 'card' }, h('h4', null, it.chant.titre, h('small', null, it.chant.type)));
+      it.props.forEach(function (p) {
+        var cb = h('input', { type: 'checkbox', 'aria-label': p.nom + ' : ' + it.chant.titre });
+        cb.checked = p.coche;
+        cb.addEventListener('change', function () { p.coche = cb.checked; majBarre(); });
+        carte.appendChild(h('div', { class: 'prop' }, cb,
+          h('div', { class: 'body' },
+            h('span', { class: 'kind' }, p.nom), ' ',
+            h('span', { class: 'sure' }, '(' + libelleConf(p.conf) + (p.source ? ' · ' + p.source : '') + ')'), h('br'),
+            h('a', { href: p.url, target: '_blank', rel: 'noopener noreferrer' }, urlCourte(p.url) + ' ↗'),
+            p.actuel ? h('span', { class: 'old' }, 'Remplacerait : ' + urlCourte(p.actuel)) : null)));
+      });
+      if (it.tags.length) {
+        var boite = h('div', { class: 'proptags' });
+        it.tags.forEach(function (t) {
+          var b = h('button', {
+            class: 'chip small ' + tc(t.k), type: 'button', 'aria-pressed': String(t.coche),
+            title: libelleConf(t.conf) + (t.nouveau ? ' · nouveau tag' : ''),
+            onclick: function () { t.coche = !t.coche; b.setAttribute('aria-pressed', String(t.coche)); majBarre(); }
+          }, (t.coche ? '✓ ' : '+ ') + t.label + (t.nouveau ? ' (nouveau)' : '') + (t.conf === 'haute' ? '' : ' ?'));
+          b.addEventListener('click', function () { b.firstChild.nodeValue = (t.coche ? '✓ ' : '+ ') + t.label + (t.nouveau ? ' (nouveau)' : '') + (t.conf === 'haute' ? '' : ' ?'); });
+          boite.appendChild(b);
+        });
+        carte.appendChild(h('div', { class: 'prop' }, h('span', { style: 'width:24px;flex:none' }), h('div', { class: 'body' }, h('span', { class: 'kind' }, 'Tags proposés'), boite)));
+      }
+      if (it.note) carte.appendChild(h('p', { class: 'note' }, it.note));
+      zone.appendChild(carte);
+    });
+
+    btnSave.addEventListener('click', appliquerRevue);
+    zone.appendChild(h('div', { class: 'revbar' }, compteur, btnSave));
+    majBarre();
+  }
+
+  function appliquerRevue() {
+    var changements = [];
+    revue.items.forEach(function (it) {
+      var ch = { id: it.chant.id }, a = false;
+      it.props.forEach(function (p) { if (p.coche) { ch[p.champ] = p.url; a = true; } });
+      var nt = it.tags.filter(function (t) { return t.coche; });
+      if (nt.length) { ch.tags = it.chant.tags.concat(nt.map(function (t) { return t.label; })); a = true; }
+      if (a) changements.push(ch);
+    });
+    if (!changements.length) return;
+    var btns = document.querySelectorAll('#revListe .revbar .btn');
+    btns.forEach(function (b) { b.disabled = true; });
+    var faits = 0, echecs = [];
+
+    function lot(i) {
+      if (i >= changements.length) return Promise.resolve();
+      var morceau = changements.slice(i, i + 40);
+      toast('Enregistrement… ' + Math.min(i + 40, changements.length) + ' sur ' + changements.length);
+      return appel('modifier_lot', { changements: morceau }).then(function (d) {
+        (d.resultats || []).forEach(function (r) {
+          if (r.ok) {
+            faits++;
+            var k = state.chants.findIndex(function (c) { return c.id === r.chant.id; });
+            if (k !== -1) state.chants[k] = indexer(r.chant);
+            revue.items = revue.items.filter(function (it) { return it.chant.id !== r.chant.id; });
+          } else {
+            echecs.push(r.message || 'Erreur');
+          }
+        });
+        return lot(i + 40);
+      });
+    }
+    lot(0).then(function () {
+      calculerLabels();
+      ecrireCache(chantsPourCache(), new Date().toISOString());
+      // Les chants restants gardent leurs cases ; on rafraîchit le reste
+      revue.items.forEach(function (it) { it.chant = state.chants.find(function (c) { return c.id === it.chant.id; }) || it.chant; });
+      majExportAgent();
+      dessinerRevue();
+      toast(faits + ' chant' + (faits > 1 ? 's' : '') + ' mis à jour.' + (echecs.length ? ' ' + echecs.length + ' refusé' + (echecs.length > 1 ? 's' : '') + '.' : ''));
+    }).catch(function (err) {
+      var zoneErr = h('p', { class: 'err', role: 'alert' });
+      var liste = $('#revListe');
+      if (err.code === 'code_invalide' || err.code === 'non_configure') { gererErreur(err, zoneErr); return; }
+      if (liste) { zoneErr.textContent = err.message + (faits ? ' (' + faits + ' déjà enregistrés.)' : ''); liste.prepend(zoneErr); }
+      btns.forEach(function (b) { b.disabled = false; });
+      if (faits) { calculerLabels(); ecrireCache(chantsPourCache(), new Date().toISOString()); }
+    });
+  }
+
   $('#btnCompose').addEventListener('click', ouvrirMesse);
 
   /* ---------- Événements ---------- */
@@ -1551,12 +2119,12 @@ dialog::backdrop { background: rgba(20,16,12,.5); }
       state.type = b.getAttribute('data-type');
       state.tags = new Set();
       state.shown = PAGE;
-      state.tagsOpen = false;
       render();
     });
   });
   $('#sort').addEventListener('change', function (e) { state.sort = e.target.value; state.shown = PAGE; render(); });
-  $('#tagMore').addEventListener('click', function () { state.tagsOpen = !state.tagsOpen; render(); });
+  $('#tagMore').addEventListener('click', ouvrirTags);
+  $('#btnSuggest').addEventListener('click', function () { ouvrirVue('revue'); });
   $('#more').addEventListener('click', function () { state.shown += PAGE; render(); });
   $('#reset').addEventListener('click', reinitialiser);
   $('#refresh').addEventListener('click', function () { charger(true); });
