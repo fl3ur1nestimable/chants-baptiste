@@ -148,7 +148,7 @@ h1 {
 /* Liste */
 .list { list-style: none; margin: 0; padding: 0; }
 .row {
-  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  display: block;
   padding: 16px 0; border-top: 1px solid var(--line);
 }
 .row:last-child { border-bottom: 1px solid var(--line); }
@@ -160,15 +160,15 @@ h1 {
 .rowtags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
 .meta { margin: 9px 0 0; color: var(--muted); font-size: .94rem; }
 .meta .next { color: var(--primary); font-weight: 600; margin-left: 12px; white-space: nowrap; }
-.actions { display: flex; gap: 8px; flex: none; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .iconbtn {
   min-width: 44px; height: 44px; padding: 0 12px;
   display: inline-flex; align-items: center; justify-content: center; gap: 8px;
   border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
   color: var(--primary); font-weight: 600; font-size: .95rem; text-decoration: none;
 }
-.iconbtn .lbl { display: none; }
-@media (min-width: 520px) { .iconbtn .lbl { display: inline; } }
+
+@media (max-width: 400px) { .actions { gap: 6px; } .iconbtn { padding: 0 9px; gap: 6px; font-size: .9rem; min-width: 0; } }
 
 /* États */
 .notice { padding: 28px 0; }
@@ -488,7 +488,8 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
     play: '<path d="M8 5.5v13l11-6.5z" fill="currentColor" stroke="none"/>',
     pencil: '<path d="M14 5l5 5L8 21H3v-5z"/>',
     close: '<path d="M6 6l12 12M18 6L6 18"/>',
-    doc: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>'
+    doc: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/>',
+    score: '<path d="M4 7h16M4 11h16M4 15h16M4 19h16"/><ellipse cx="9" cy="15" rx="2.6" ry="1.9"/><path d="M11.4 15V5"/>'
   };
   function icon(name, size) {
     var s = size || 20;
@@ -798,17 +799,28 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
     });
 
     var actions = h('div', { class: 'actions' });
-    if (c.lien && /^https?:\/\//i.test(c.lien)) {
+    if (estUrl(c.lien)) {
       actions.appendChild(h('a', {
         class: 'iconbtn', href: c.lien, target: '_blank', rel: 'noopener noreferrer',
         'aria-label': 'Écouter ' + c.titre
       }, icon('play', 18), h('span', { class: 'lbl' }, 'Écouter')));
     }
-    if (c.paroles || c.partition || c.lien) {
+    if (estUrl(c.paroles)) {
+      actions.appendChild(h('a', {
+        class: 'iconbtn', href: c.paroles.trim(), target: '_blank', rel: 'noopener noreferrer',
+        'aria-label': 'Paroles de ' + c.titre
+      }, icon('doc', 18), h('span', { class: 'lbl' }, 'Paroles')));
+    } else if (c.paroles) {
       actions.appendChild(h('button', {
-        class: 'iconbtn', type: 'button', 'aria-label': 'Paroles, partition et vidéo de ' + c.titre,
+        class: 'iconbtn', type: 'button', 'aria-label': 'Paroles de ' + c.titre,
         onclick: function () { ouvrirParoles(c); }
       }, icon('doc', 18), h('span', { class: 'lbl' }, 'Paroles')));
+    }
+    if (estUrl(c.partition)) {
+      actions.appendChild(h('a', {
+        class: 'iconbtn', href: c.partition, target: '_blank', rel: 'noopener noreferrer',
+        'aria-label': 'Partition de ' + c.titre
+      }, icon('score', 18), h('span', { class: 'lbl' }, 'Partition')));
     }
     if (state.edit) {
       actions.appendChild(h('button', {
@@ -1289,11 +1301,11 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
     d.setDate(d.getDate() + ((7 - d.getDay()) % 7));
     return isoLocal(d);
   }
-  function messeVide() { return { date: prochainDimanche(), nom: '', items: {} }; }
+  function messeVide() { return { date: prochainDimanche(), nom: '', texte: null, items: {} }; }
   function chargerMesse() {
     try {
       var m = JSON.parse(sessionStorage.getItem(MASS_KEY));
-      if (m && typeof m.date === 'string' && m.items && typeof m.items === 'object') { if (typeof m.nom !== 'string') m.nom = ''; return m; }
+      if (m && typeof m.date === 'string' && m.items && typeof m.items === 'object') { if (typeof m.nom !== 'string') m.nom = ''; if (typeof m.texte !== 'string') m.texte = null; return m; }
     } catch (e) { /* rien */ }
     return messeVide();
   }
@@ -1342,6 +1354,7 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
     });
     return out;
   }
+  function texteCourant() { return typeof mass.texte === 'string' ? mass.texte : texteMesse(); }
   function texteMesse() {
     var lignes = lignesMesse();
     if (!lignes.length) return '';
@@ -1565,23 +1578,31 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
     var box = $('#export');
     if (!box) return;
     if (apercuUrl) { URL.revokeObjectURL(apercuUrl); apercuUrl = null; }
-    var texte = texteMesse();
+    var manuel = typeof mass.texte === 'string';
+    var texte = texteCourant();
     box.replaceChildren(h('h3', null, 'Partager la messe'));
-    if (!texte) {
+    if (!texte && !manuel) {
       box.appendChild(h('p', { class: 'empty' }, 'Choisis au moins un chant pour obtenir le texte et l\'image.'));
       return;
     }
-    var zone = h('textarea', { id: 'm-texte', readonly: true, rows: '12', 'aria-label': 'Texte de la messe' });
+    var zone = h('textarea', { id: 'm-texte', rows: '12', 'aria-label': 'Texte de la messe (modifiable)', spellcheck: 'false' });
     zone.value = texte;
+    var note = h('p', { class: 'hint', style: 'margin:10px 0 0' },
+      'Texte modifié à la main : il ne suit plus les changements de chants, et l\'image reste celle des chants choisis. ',
+      h('button', { class: 'linkbtn', type: 'button', style: 'padding:0', onclick: function () { mass.texte = null; sauverMesse(); majExport(); } }, 'Reprendre le texte automatique'));
+    note.hidden = !manuel;
+    zone.addEventListener('input', function () { mass.texte = zone.value; sauverMesse(); note.hidden = false; });
     box.appendChild(h('div', { class: 'export-actions' },
       h('button', { class: 'btn primary', type: 'button', onclick: copierTexte }, 'Copier le texte'),
-      h('button', { class: 'btn', type: 'button', onclick: telechargerImage }, 'Télécharger l\'image')));
+      lignesMesse().length ? h('button', { class: 'btn', type: 'button', onclick: telechargerImage }, 'Télécharger l\'image') : null));
     box.appendChild(zone);
+    box.appendChild(note);
     box.appendChild(h('div', { class: 'preview', id: 'm-apercu' }));
   }
 
   function copierTexte() {
-    var texte = texteMesse();
+    var z0 = $('#m-texte');
+    var texte = z0 ? z0.value : texteCourant();
     function secours() {
       var z = $('#m-texte');
       if (!z) return;
