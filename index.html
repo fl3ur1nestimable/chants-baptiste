@@ -1502,7 +1502,9 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
   function ouvrirSelection(slot) {
     var types = slot.types || ['Chant'];
     var tagKey = slot.tag ? norm(slot.tag) : null;
-    var etat = { q: '', soloTag: !!tagKey, tri: 'az' };
+    var etat = { q: '', soloTag: !!tagKey, tri: 'az', tags: new Set(), plus: false };
+    var tagBox = h('div', { class: 'chips', style: 'margin-top:10px' });
+    var tagPlus = h('button', { class: 'linkbtn', type: 'button', hidden: true, onclick: function () { etat.plus = !etat.plus; maj(); } });
 
     var recherche = h('input', {
       type: 'search', class: 'pickersearch', placeholder: 'Chercher un titre', 'aria-label': 'Chercher un titre',
@@ -1543,6 +1545,27 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
           return t.length >= 4 ? c._m.indexOf(t) !== -1 : c._m.indexOf(' ' + t) !== -1;
         });
       });
+      // Tags : mêmes règles que dans la banque (le chant doit avoir tous les tags cochés)
+      var sel = Array.from(etat.tags);
+      items = items.filter(function (c) { return sel.every(function (k) { return c._g.indexOf(k) !== -1; }); });
+      var counts = new Map();
+      items.forEach(function (c) { new Set(c._g).forEach(function (k) { counts.set(k, (counts.get(k) || 0) + 1); }); });
+      var cles = Array.from(counts.keys()).filter(function (k) {
+        return !etat.tags.has(k) && !(etat.soloTag && k === tagKey);
+      }).sort(function (a, b) {
+        return (counts.get(b) - counts.get(a)) || (state.tagLabels.get(a) || a).localeCompare(state.tagLabels.get(b) || b, 'fr', { sensitivity: 'base' });
+      });
+      var visibles = sel.concat(etat.plus ? cles : cles.slice(0, 10));
+      tagBox.replaceChildren();
+      visibles.forEach(function (k) {
+        var actif = etat.tags.has(k);
+        tagBox.appendChild(h('button', {
+          class: 'chip small ' + tc(k), type: 'button', 'aria-pressed': String(actif),
+          onclick: function () { if (etat.tags.has(k)) etat.tags.delete(k); else etat.tags.add(k); maj(); }
+        }, state.tagLabels.get(k) || k, actif ? null : h('span', { class: 'n' }, String(counts.get(k)))));
+      });
+      tagPlus.hidden = cles.length <= 10;
+      tagPlus.textContent = etat.plus ? 'Moins de tags' : 'Tous les tags (' + (cles.length + sel.length) + ')';
       items = trier(items, etat.tri);
       var MAX = 40;
       liste.replaceChildren();
@@ -1565,6 +1588,7 @@ pre.prompt { max-height: 14rem; overflow: auto; margin: 10px 0; padding: 12px; b
       h('h2', null, 'Choisir : ' + (slot.nom || slot.label)),
       recherche,
       h('div', { class: 'pickopts' }, chipTag, triSel),
+      tagBox, tagPlus,
       info, liste,
       h('div', { class: 'free' },
         h('p', { class: 'slot-label' }, 'Pas dans la banque ?'),
